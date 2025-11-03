@@ -1,14 +1,19 @@
 module PhotoGroove exposing (main)
 
-import Html exposing (div, h1, img, text)
+import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Browser
+
+photoListUrl : String
+photoListUrl =
+    "http://elm-in-action/list-photos"
 
 urlPrefix : String
 urlPrefix =
     "http://elm-in-action.com/"
 
+update : { a | description : String, data : b } -> { c | selectedUrl : b } -> { c | selectedUrl : b }
 update msg model =
     if msg.description == "ClickedPhoto" then
         { model | selectedUrl = msg.data }
@@ -25,7 +30,7 @@ initialModel =
     , selectedUrl = "1.jpeg"
     }
 
--- view : { a | selectedUrl: String, photos: List { b | url: String } } -> Html.Html msg
+view : { a | selectedUrl : String, photos : List { b | url : String } } -> Html.Html { description : String, data : String }
 view model =
     div [ class "content" ]
     [
@@ -40,6 +45,7 @@ view model =
     ]
 
 
+viewThumbnail : String -> { a | url : String } -> Html.Html { description : String, data : String }
 viewThumbnail selectedUrl thumb =
     img
         [ src (urlPrefix ++ thumb.url)
@@ -48,6 +54,7 @@ viewThumbnail selectedUrl thumb =
         ]
         []
 
+main : Program () { photos : List { url : String }, selectedUrl : String } { description : String, data : String }
 main =
     Browser.sandbox
         { init = initialModel
