@@ -5,6 +5,9 @@
   "main": "app.js",
   "scripts": {
     "build": "elm make src/PhotoGroove.elm --output=app.js",
+    "watch": "chokidar 'src/**/*.elm' -c 'npm run build'",
+    "start": "python3 -m http.server 8000",
+    "dev": "npm run build && npm run watch & npm start",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "husky",
     "release": "standard-version",
@@ -19,6 +22,8 @@
   "devDependencies": {
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
+    "chokidar-cli": "^3.0.0",
+    "elm": "^0.19.1-6",
     "husky": "^9.1.7",
     "standard-version": "^9.5.0"
   }

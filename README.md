@@ -15,13 +15,23 @@ npm install
 
 ## Development
 
-Build the application:
+Start the development server with auto-rebuild:
+
+```bash
+npm run dev
+```
+
+This will:
+- Build the application
+- Watch for changes and rebuild automatically
+- Start a local server at http://localhost:8000
+
+Alternatively, build manually:
 
 ```bash
 npm run build
+npm start
 ```
-
-Then open `index.html` in your browser.
 
 ## Commit Convention
 
