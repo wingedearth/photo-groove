@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/wingedearth/photo-groove/compare/v1.2.0...v1.3.0) (2025-11-07)
+
+
+### Features
+
+* add dev server with auto-rebuild on file changes ([ab642b5](https://github.com/wingedearth/photo-groove/commit/ab642b55a6d6af243a9901673a1c81c30c8161c4))
+* add update functionality ([b84adc5](https://github.com/wingedearth/photo-groove/commit/b84adc529d24530e9b68016cf5b771d4ac9d7285))
+
 ## [1.2.0](https://github.com/wingedearth/photo-groove/compare/v1.1.0...v1.2.0) (2025-11-02)
 
 
