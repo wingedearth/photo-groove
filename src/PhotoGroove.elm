@@ -4,23 +4,24 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Browser
-
-photoListUrl : String
-photoListUrl =
-    "http://elm-in-action/list-photos"
+import Array exposing (Array)
 
 urlPrefix : String
 urlPrefix =
     "http://elm-in-action.com/"
 
-update : { a | description : String, data : b } -> { c | selectedUrl : b } -> { c | selectedUrl : b }
-update msg model =
-    if msg.description == "ClickedPhoto" then
-        { model | selectedUrl = msg.data }
-    else
-        model
+type alias Photo =
+    { url: String }
 
-initialModel : { photos: List { url: String }, selectedUrl: String }
+type alias Model =
+    { photos: List Photo
+    , selectedUrl : String
+    }
+
+type alias Msg =
+    { description : String, data : String }
+
+initialModel : Model
 initialModel =
     { photos = 
         [ { url = "1.jpeg" }
@@ -30,7 +31,13 @@ initialModel =
     , selectedUrl = "1.jpeg"
     }
 
-view : { a | selectedUrl : String, photos : List { b | url : String } } -> Html.Html { description : String, data : String }
+photoArray : Array Photo
+photoArray =
+    Array.fromList initialModel.photos
+
+
+
+view : Model -> Html Msg
 view model =
     div [ class "content" ]
     [
@@ -45,7 +52,7 @@ view model =
     ]
 
 
-viewThumbnail : String -> { a | url : String } -> Html.Html { description : String, data : String }
+viewThumbnail : String -> Photo -> Html Msg
 viewThumbnail selectedUrl thumb =
     img
         [ src (urlPrefix ++ thumb.url)
@@ -53,6 +60,13 @@ viewThumbnail selectedUrl thumb =
         , onClick { description = "ClickedPhoto", data = thumb.url }
         ]
         []
+
+update : { a | description : String, data : b } -> { c | selectedUrl : b } -> { c | selectedUrl : b }
+update msg model =
+    if msg.description == "ClickedPhoto" then
+        { model | selectedUrl = msg.data }
+    else
+        model
 
 main : Program () { photos : List { url : String }, selectedUrl : String } { description : String, data : String }
 main =
