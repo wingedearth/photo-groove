@@ -2,6 +2,7 @@
   "name": "photo-groove",
   "version": "1.4.1",
   "description": "An Elm application for browsing and selecting photos.",
+  "private": true,
   "main": "app.js",
   "scripts": {
     "build": "elm make src/PhotoGroove.elm --output=app.js",
