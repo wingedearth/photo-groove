@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.2](https://github.com/wingedearth/photo-groove/compare/v1.4.1...v1.4.2) (2025-11-12)
+
+
+### Bug Fixes
+
+* resolve husky warning and git email config error ([1230463](https://github.com/wingedearth/photo-groove/commit/1230463d23ce69c29e1a205a33a0273944d76465))
+
 ### [1.4.1](https://github.com/wingedearth/photo-groove/compare/v1.4.0...v1.4.1) (2025-11-12)
 
 ## [1.4.0](https://github.com/wingedearth/photo-groove/compare/v1.3.1...v1.4.0) (2025-11-12)
