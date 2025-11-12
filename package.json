@@ -1,6 +1,6 @@
 {
   "name": "photo-groove",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "An Elm application for browsing and selecting photos.",
   "main": "app.js",
   "scripts": {
