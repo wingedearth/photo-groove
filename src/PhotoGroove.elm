@@ -1,10 +1,12 @@
 module PhotoGroove exposing (main)
 
-import Html exposing (..)
-import Html.Attributes exposing (..)
-import Html.Events exposing (onClick)
 import Browser
-import Array exposing (Array)
+import Html exposing (..)
+import Html.Attributes exposing (class, classList, id, name, src, title, type_)
+import Html.Events exposing (onClick)
+import Http
+import Json.Decode exposing (Decoder, int, list, string, succeed)
+import Json.Decode.Pipeline exposing (optional, required)
 import Random
 
 urlPrefix : String
@@ -17,7 +19,10 @@ type ThumbnailSize
     | Large
 
 type alias Photo =
-    { url: String }
+    { url: String
+    , size: Int
+    , title: String
+    }
 
 type alias Model =
     { status : Status
@@ -29,26 +34,33 @@ type Msg =
     | ClickedSize ThumbnailSize
     | ClickedSurpriseMe
     | GotRandomPhoto Photo
+    | GotPhotos (Result Http.Error (List Photo))
     
 type Status
     = Loading
     | Loaded (List Photo) String
     | Errored String
 
--- chosenSize : ThumbnailSize
--- chosenSize = Small
+photoDecoder : Decoder Photo
+photoDecoder =
+    succeed Photo
+        |> required "url" string
+        |> required "size" int
+        |> optional "title" string "(untitled)"
 
 initialModel : Model
 initialModel =
     { status = 
-        Loaded
-            [ { url = "1.jpeg" }
-            , { url = "2.jpeg" }
-            , { url = "3.jpeg" }
-            ]
-            "1.jpeg"
+        Loading
     , chosenSize = Medium
     }
+
+initialCmd : Cmd Msg
+initialCmd =
+    Http.get
+        { url = "http://elm-in-action.com/photos/list.json"
+        , expect = Http.expectJson GotPhotos (list photoDecoder)
+        }
 
 view : Model -> Html Msg
 view model =
@@ -92,6 +104,7 @@ viewThumbnail : String -> Photo -> Html Msg
 viewThumbnail selectedUrl thumb =
     img
         [ src (urlPrefix ++ thumb.url)
+        , title (thumb.title ++ " [" ++ String.fromInt thumb.size ++ " KB]")
         , classList [ ( "selected", selectedUrl == thumb.url ) ]
         , onClick (ClickedPhoto thumb.url)
         ]
@@ -135,11 +148,21 @@ update msg model =
                         ( model, Cmd.none )
         ClickedSize size ->
             ({ model | chosenSize = size }, Cmd.none)
+        GotPhotos (Ok photos) ->
+            case photos of
+                    first :: rest ->
+                        ( { model | status = Loaded photos first.url }
+                        , Cmd.none
+                        )
+                    [] ->
+                        ( { model | status = Errored "0 photos found" }, Cmd.none )
+        GotPhotos (Err httpError) ->
+            ( { model | status = Errored "Sserver error!" }, Cmd.none )
 
 main : Program () Model Msg
 main =
     Browser.element
-        { init = \flag -> ( initialModel, Cmd.none)
+        { init = \_ -> ( initialModel, initialCmd)
         , view = view
         , update = update
         , subscriptions = \_ -> Sub.none
