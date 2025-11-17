@@ -7,6 +7,7 @@ import Html.Events exposing (onClick)
 import Http
 import Json.Decode exposing (Decoder, int, list, string, succeed)
 import Json.Decode.Pipeline exposing (optional, required)
+import Json.Encode
 import Random
 
 urlPrefix : String
@@ -74,6 +75,18 @@ view model =
             
             Errored errorMessage ->
                 [ text ("Error: " ++ errorMessage) ]
+
+-- viewFilter : String -> Int -> Html Msg
+-- viewFilter name magnitude =
+--     div [ class "filter-slider" ]
+--         [ label [] [ text name ] 
+--         , rangeSlider
+--             [ max "11"
+--             , Html.Attributes.property "val" (Json.Encode.int magnitude)
+--             ]
+--             []
+--         , label [] [ text (String.fromInt magnitude ) ]
+--         ]
 
 viewLoaded : List Photo -> String -> ThumbnailSize -> List (Html Msg)
 viewLoaded photos selectedUrl chosenSize =
@@ -167,3 +180,7 @@ main =
         , update = update
         , subscriptions = \_ -> Sub.none
         }
+
+rangeSlider : List (Attribute msg) -> List (Html msg) -> Html msg
+rangeSlider attributes children =
+    node "range-slider" attributes children
