@@ -2,7 +2,7 @@ module PhotoGroove exposing (main)
 
 import Browser
 import Html exposing (..)
-import Html.Attributes exposing (class, classList, id, name, src, title, type_)
+import Html.Attributes as Attr exposing (class, classList, id, name, src, title, type_)
 import Html.Events exposing (onClick)
 import Http
 import Json.Decode exposing (Decoder, int, list, string, succeed)
@@ -76,34 +76,51 @@ view model =
             Errored errorMessage ->
                 [ text ("Error: " ++ errorMessage) ]
 
--- viewFilter : String -> Int -> Html Msg
--- viewFilter name magnitude =
---     div [ class "filter-slider" ]
---         [ label [] [ text name ] 
---         , rangeSlider
---             [ max "11"
---             , Html.Attributes.property "val" (Json.Encode.int magnitude)
---             ]
---             []
---         , label [] [ text (String.fromInt magnitude ) ]
---         ]
+viewFilter : String -> Int -> Html Msg
+viewFilter name magnitude =
+    div [ class "filter-slider" ]
+        [ label [] [ text name ] 
+        , rangeSlider
+            [ Attr.max "11"
+            , Attr.property "val" (Json.Encode.int magnitude)
+            ]
+            []
+        , label [] [ text (String.fromInt magnitude ) ]
+        ]
+
+viewLargeImage : String -> Html msg
+viewLargeImage selectedUrl =
+    img
+            [ class "large"
+            , src (urlPrefix ++ "large/" ++ selectedUrl)
+            ]
+            []
+
+viewTitle : String -> Html msg
+viewTitle title =
+    h1 [] [ text title ]
+
+viewSurpriseButton : Html Msg
+viewSurpriseButton =
+    button 
+    [ onClick ClickedSurpriseMe ]
+    [ text "Surprise Me!" ]
 
 viewLoaded : List Photo -> String -> ThumbnailSize -> List (Html Msg)
 viewLoaded photos selectedUrl chosenSize =
-    [ h1 [] [ text "Photo Groove" ]
-    , button 
-    [ onClick ClickedSurpriseMe ]
-    [ text "Surprise Me!" ]
+    [ viewTitle "Photo Groove"
+    , viewSurpriseButton
+    , div [ class "filters" ]
+        [ viewFilter "Hue" 0
+        , viewFilter "Ripple" 0
+        , viewFilter "Noise" 0
+        ]
     , h3 [] [ text "Thumbnail Size:" ]
     , div [ id "choose-size" ]
         ( List.map viewSizeChooser [ Small, Medium, Large ] )
     , div [ id "thumbnails", class (sizeToString chosenSize) ]
         (List.map (viewThumbnail selectedUrl) photos)
-        , img
-            [ class "large"
-            , src (urlPrefix ++ "large/" ++ selectedUrl)
-            ]
-            []
+        , viewLargeImage selectedUrl
     ]
 
 viewSizeChooser : ThumbnailSize -> Html Msg
